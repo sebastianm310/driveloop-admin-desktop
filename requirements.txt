@@ -1,0 +1,5 @@
+dotenv
+bcrypt
+PySide6
+httpx
+qasync
