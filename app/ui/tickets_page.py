@@ -34,6 +34,24 @@ class TicketsPage(QWidget):
         self.table.setWordWrap(False)
         self.table.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.table.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        
+        columnas = [
+            "Usuario", "Fecha", "Estado", "Prioridad", "Acción"
+        ]
+        self.table.setColumnCount(len(columnas))
+        self.table.setHorizontalHeaderLabels(columnas)
+        
+        header = self.table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Stretch)           # Usuario
+        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)  # Fecha
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)  # Estado
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)  # Prioridad
+        header.setSectionResizeMode(4, QHeaderView.Fixed)             # Acción
+
+        self.table.setColumnWidth(4, 150)
+
+        self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
         layout.addWidget(self.table)
         self.setLayout(layout)
@@ -44,12 +62,7 @@ class TicketsPage(QWidget):
     async def load_data(self):
         self.tickets_data = await TicketsService.listar_tickets()
 
-        columnas = [
-            "Usuario", "Fecha", "Estado", "Prioridad", "Acción"
-        ]
-
-        self.table.setColumnCount(len(columnas))
-        self.table.setHorizontalHeaderLabels(columnas)
+        self.table.setRowCount(0)
         self.table.setRowCount(len(self.tickets_data))
 
         for row, ticket in enumerate(self.tickets_data):
@@ -86,18 +99,6 @@ class TicketsPage(QWidget):
 
             self.table.setCellWidget(row, 4, btn_detalle)
             self.table.setRowHeight(row, 42)
-
-        header = self.table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.Stretch)           # Usuario
-        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)  # Fecha
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)  # Estado
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)  # Prioridad
-        header.setSectionResizeMode(4, QHeaderView.Fixed)             # Acción
-
-        self.table.setColumnWidth(4, 150)
-
-        self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
     def abrir_detalle(self, ticket):
         dialog = TicketDetalleDialog(ticket, self)

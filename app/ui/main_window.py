@@ -129,3 +129,12 @@ class MainWindow(QMainWindow):
         self.btn_vehiculos.setChecked(index == 1)
         self.btn_usuarios.setChecked(index == 2)
         self.btn_tickets.setChecked(index == 3)
+
+        if index == 0:
+            self.dashboard_page.load_data()
+        elif index == 1:
+            self.vehiculos_page.load_data()
+        elif index == 2:
+            self.usuarios_page.load_data()
+        elif index == 3:
+            self.tickets_page.load_data()

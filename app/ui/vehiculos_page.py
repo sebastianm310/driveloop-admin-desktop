@@ -36,15 +36,6 @@ class VehiculosPage(QWidget):
         self.table.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.table.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
 
-        layout.addWidget(self.table)
-        self.setLayout(layout)
-
-        self.load_data()
-
-    @asyncSlot()
-    async def load_data(self):
-        self.vehiculos_data = await VehiculosService.listar_vehiculos()
-
         columnas = [
             "Código",
             "Usuario",
@@ -55,9 +46,35 @@ class VehiculosPage(QWidget):
             "Acción",
             "Reservas"
         ]
-
         self.table.setColumnCount(len(columnas))
         self.table.setHorizontalHeaderLabels(columnas)
+
+        header = self.table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(5, QHeaderView.Stretch)
+        header.setSectionResizeMode(6, QHeaderView.Fixed)
+        header.setSectionResizeMode(7, QHeaderView.Fixed)
+
+        self.table.setColumnWidth(6, 150)
+        self.table.setColumnWidth(7, 160)
+
+        self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+
+        layout.addWidget(self.table)
+        self.setLayout(layout)
+
+        self.load_data()
+
+    @asyncSlot()
+    async def load_data(self):
+        self.vehiculos_data = await VehiculosService.listar_vehiculos()
+
+        self.table.setRowCount(0)
         self.table.setRowCount(len(self.vehiculos_data))
 
         for row, vehiculo in enumerate(self.vehiculos_data):
@@ -155,22 +172,6 @@ class VehiculosPage(QWidget):
 
             self.table.setCellWidget(row, 7, btn_reservas)
             self.table.setRowHeight(row, 42)
-
-        header = self.table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(1, QHeaderView.Stretch)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(5, QHeaderView.Stretch)
-        header.setSectionResizeMode(6, QHeaderView.Fixed)
-        header.setSectionResizeMode(7, QHeaderView.Fixed)
-
-        self.table.setColumnWidth(6, 150)
-        self.table.setColumnWidth(7, 160)
-
-        self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
     def abrir_detalle(self, vehiculo):
         dialog = VehiculoDetalleDialog(vehiculo, self)
